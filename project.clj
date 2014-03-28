@@ -1,4 +1,4 @@
-(defproject postgresql "0.1.0-SNAPSHOT"
+(defproject clj-postgresql "0.1.0-SNAPSHOT"
   :description "PostgreSQL helpers for Clojure"
   :url "https://github.com/remodoy/clj-postgresql"
   :license {:name "Two clause BSD license"
