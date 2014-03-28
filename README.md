@@ -5,7 +5,17 @@ features is Clojure projects.
 
 ## Usage
 
-FIXME
+Depend on [clj-postgresql "0.1.0-SNAPSHOT"] (Latest version: https://clojars.org/clj-postgresql)
+
+(ns ...
+  (:require ...
+            [clj-postgresql.core :as pg]
+            [clj-postgresql.pool :as pool]))
+
+(defonce db (pool/datasource {:jdbcUrl "jdbc:postgresql://127.0.0.1/mydb" :username "myuser" :password "apassword"}))
+
+(jdbc/query db ["SELECT ? AS testcolumn", (pg/pg-json {:foo "bar"})])
+
 
 ## License
 
