@@ -2,7 +2,6 @@
   (:require [cheshire.core :as json]
             [clojure.xml :as xml]
             [clj-postgresql.pool :refer [pooled-db close-pooled-db!]]
-            [clj-postgresql.connection :as conn]
             [clj-postgresql.pgpass :as pgpass])
   (:import org.postgresql.util.PGobject
            org.postgresql.util.PGmoney
