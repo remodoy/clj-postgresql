@@ -6,7 +6,7 @@
 (defn db-spec->pool-config
   "Converts a db-spec with :host :port :dbname and :user to bonecp pool config"
   [{:keys [dbtype host port dbname user password]}]
-  {:jdbcUrl (format "jdbc:%s//%s:%s/%s" dbtype host port dbname)
+  {:jdbcUrl (format "jdbc:%s://%s:%s/%s" dbtype host port dbname)
    :username user
    :password password})
 
