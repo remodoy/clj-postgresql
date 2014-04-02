@@ -5,16 +5,33 @@ features is Clojure projects.
 
 ## Usage
 
-Depend on [clj-postgresql "0.1.0-SNAPSHOT"] (Latest version: https://clojars.org/clj-postgresql)
+Depend on:
+    [clj-postgresql "0.1.0-SNAPSHOT"]
+(Latest version: https://clojars.org/clj-postgresql)
 
-(ns ...
-  (:require ...
-            [clj-postgresql.core :as pg]
-            [clj-postgresql.pool :as pool]))
+	(ns ...
+		(:require ...
+			[clj-postgresql.core :as pg]))
+	
+	(defonce db (pg/pg-spec :host "localhost" :dbname "testdb" :username "myuser" :password "apassword"))
+	(jdbc/query db ["SELECT ? AS testcolumn", (pg/pg-json {:foo "bar"})])
 
-(defonce db (pool/datasource {:jdbcUrl "jdbc:postgresql://127.0.0.1/mydb" :username "myuser" :password "apassword"}))
+	(defonce pool (pg/pg-pool :host "localhost" :dbname "testdb" :username "myuser" :password "apassword"))
+	(jdbc/query pool ["SELECT 1"])
 
-(jdbc/query db ["SELECT ? AS testcolumn", (pg/pg-json {:foo "bar"})])
+
+### Connecting to database
+
+The pg-spec and pg-pool functions use PGHOST, PGPORT, PGUSER and PGDATABASE environment variables
+and the ~/.pgpass file by default. The function arguments can be used to override the connection
+parameters in the environment. E.g.:
+
+	(def db (pg-pool :dbname "anotherdb"))
+	(jdbc/query db ["SELECT 'test'"])
+
+The pool can be closed with:
+
+	(close-pooled-db! db)
 
 
 ## License

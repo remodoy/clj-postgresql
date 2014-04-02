@@ -3,7 +3,6 @@
   :url "https://github.com/remodoy/clj-postgresql"
   :license {:name "Two clause BSD license"
             :url "http://github.com/remodoy/clj-postgresql/README.md"}
-  :global-vars {*warn-on-reflection* true}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [postgresql "9.3-1101.jdbc4"]
                  [cheshire "5.3.1"]
