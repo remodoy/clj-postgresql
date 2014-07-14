@@ -1,7 +1,9 @@
 (ns clj-postgresql.pool
   "BoneCP based connection pool"
   (:require [clojure.java.data :as data])
-  (:import com.jolbox.bonecp.BoneCPDataSource))
+  (:import (com.jolbox.bonecp BoneCPDataSource BoneCPConfig ConnectionHandle)
+           (com.jolbox.bonecp.hooks AbstractConnectionHook)
+           (java.util.concurrent TimeUnit)))
 
 (defn db-spec->pool-config
   "Converts a db-spec with :host :port :dbname and :user to bonecp pool config"
@@ -18,3 +20,11 @@
 (defn close-pooled-db!
   [{:keys [datasource]}]
   (.close ^BoneCPDataSource datasource))
+
+(defn connect-hook
+  "Register a function to modify newly acquired connection"
+  [acquire-fn]
+  (proxy [AbstractConnectionHook] []
+    (onAcquire [^ConnectionHandle connection-handle]
+      (acquire-fn (.getInternalConnection connection-handle)))))
+      
