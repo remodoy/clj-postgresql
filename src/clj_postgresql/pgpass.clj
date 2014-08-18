@@ -5,7 +5,7 @@
 
 (defn parse-pgpass-line
   "The .pgpass files has lines of format: hostname:port:database:username:password
-Return a map of fields {:pg-hostname \"*\" ...}"
+  Return a map of fields {:pg-hostname \"*\" ...}"
   [s]
   (zipmap
    [:pg-hostname :pg-port :pg-database :pg-username :pg-password]
@@ -27,7 +27,7 @@ Return a map of fields {:pg-hostname \"*\" ...}"
   [{:keys [host port dbname user]} {:keys [pg-hostname pg-port pg-database pg-username pg-password]}]
   (when 
       (and
-       (or (= pg-hostname "*") (= pg-hostname host))
+       (or (= pg-hostname "*") (= pg-hostname host) (and (= pg-hostname "localhost") (nil? host)))
        (or (= pg-port "*") (= pg-port port))
        (or (= pg-database "*") (= pg-database dbname))
        (or (= pg-username "*") (= pg-username user)))
