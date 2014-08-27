@@ -1,5 +1,5 @@
 (ns clj-postgresql.pgpass
-  "Read password from ~/.pgpass"
+  "Logic for matching passwords ~/.pgpass passwords to db specs."
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
 
@@ -28,7 +28,7 @@
   (when 
       (and
        (or (= pg-hostname "*") (= pg-hostname host) (and (= pg-hostname "localhost") (nil? host)))
-       (or (= pg-port "*") (= pg-port port))
+       (or (= pg-port "*") (= pg-port port) (and (= pg-port "5432") (nil? port)))
        (or (= pg-database "*") (= pg-database dbname))
        (or (= pg-username "*") (= pg-username user)))
     pg-password))

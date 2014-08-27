@@ -8,9 +8,12 @@
 (defn db-spec->pool-config
   "Converts a db-spec with :host :port :dbname and :user to bonecp pool config"
   [{:keys [dbtype host port dbname user password]}]
-  {:jdbcUrl (format "jdbc:%s://%s:%s/%s" dbtype host port dbname)
-   :username user
-   :password password})
+  (let [host-part (when host (if port (format "%s:%s" host port) host))
+        pool-conf {:jdbcUrl (format "jdbc:%s://%s/%s" dbtype (or host-part "") dbname)
+                   :username user}]
+    (if password
+      (assoc pool-conf :password password)
+      pool-conf)))
 
 (defn pooled-db
   [spec opts]
@@ -20,11 +23,3 @@
 (defn close-pooled-db!
   [{:keys [datasource]}]
   (.close ^BoneCPDataSource datasource))
-
-(defn connect-hook
-  "Register a function to modify newly acquired connection"
-  [acquire-fn]
-  (proxy [AbstractConnectionHook] []
-    (onAcquire [^ConnectionHandle connection-handle]
-      (acquire-fn (.getInternalConnection connection-handle)))))
-      
