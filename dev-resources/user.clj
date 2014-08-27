@@ -5,7 +5,7 @@
             [clj-postgresql.coerce :as coerce]
             [clojure.java.jdbc :as jdbc]))
 
-(def spec (delay (pg/pg-spec)))
-(def pool (delay (pg/pg-pool)))
+(def spec (delay (pg/spec)))
+(def pool (delay (pg/pool)))
 
 

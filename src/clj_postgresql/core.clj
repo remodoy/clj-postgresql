@@ -53,7 +53,7 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
           PGPORT (assoc :port PGPORT)
           PGUSER (assoc :user PGUSER)))
 
-(defn pg-spec
+(defn spec
   "Create database spec for PostgreSQL. Uses PG* environment variables by default
    and acceps options in the form:
    (pg-spec :dbname ... :host ... :port ... :user ... :password ...)"
@@ -71,10 +71,10 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
     (cond-> (merge extra-opts db-spec)
             password (assoc :password password))))
 
-(defn pg-pool
+(defn pool
   [& rest]
-  (let [spec (apply pg-spec rest)]
-    (pooled-db spec {})))
+  (let [m (apply spec rest)]
+    (pooled-db m {})))
 
 (defn tables
   [db]
@@ -188,5 +188,5 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
   [points-or-str]
   (if (coll? points-or-str)
     (PGpolygon. (into-array PGpoint (map point points-or-str)))
-    (PGpolygon. (str points-or-str))))
+    (PGpolygon. ^String (str points-or-str))))
     

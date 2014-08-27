@@ -77,6 +77,8 @@
    (s/optional-key :crs) CRS
    (s/optional-key :bbox) BBox})
 
+(declare GeometryCollection)
+
 (s/defschema Geometry
   (s/either Point MultiPoint LineString MultiLineString Polygon MultiPolygon (s/recursive #'GeometryCollection)))
 
