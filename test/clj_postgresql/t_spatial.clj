@@ -1,3 +1,3 @@
 (ns clj-postgresql.t-spatial
-  (:use [middje.sweet])
+  (:use [midje.sweet])
   (:require [clj-postgresql.spatial :as st]))
