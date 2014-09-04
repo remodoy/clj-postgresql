@@ -19,7 +19,7 @@ Add the following to the `:dependencies` section of your `project.clj` file:
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
 ```
-[clj-postgresql "0.1.0-SNAPSHOT"]
+[clj-postgresql "0.2.0-SNAPSHOT"]
 ```
 
 [Maven](http://maven.apache.org/) dependency information:
@@ -44,10 +44,10 @@ Add the following to the `:dependencies` section of your `project.clj` file:
 		(:require ...
 			[clj-postgresql.core :as pg]))
 	
-	(defonce db (pg/pg-spec :host "localhost" :dbname "testdb" :username "myuser" :password "apassword"))
-	(jdbc/query db ["SELECT ? AS testcolumn", (pg/pg-json {:foo "bar"})])
+	(defonce db (pg/spec :host "localhost" :dbname "testdb" :username "myuser" :password "apassword"))
+	(jdbc/query db ["SELECT ? AS testcolumn", (pg/json {:foo "bar"})])
 
-	(defonce pool (pg/pg-pool :host "localhost" :dbname "testdb" :username "myuser" :password "apassword"))
+	(defonce pool (pg/pool :host "localhost" :dbname "testdb" :username "myuser" :password "apassword"))
 	(jdbc/query pool ["SELECT 1"])
 
 
