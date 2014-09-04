@@ -3,13 +3,14 @@
    to allow using PostGIS geometry types without the PGgeometry wrapper, support the
    PGjson type and allow coercing clojure structures into PostGIS types."
   (:require [clj-postgresql.coerce :as coerce] 
-            [clj-postgresql.PGjson]
             [clojure.java.jdbc :as jdbc]
             [clojure.xml :as xml]
-            [taoensso.timbre :as timbre])
+            [taoensso.timbre :as timbre]
+            [fi.remod.pg.PGjson :refer :all])
   (:import [org.postgresql.util.PGobject]
            [org.postgis Geometry PGgeometry PGgeometryLW]
-           [java.sql PreparedStatement]))
+           [java.sql PreparedStatement]
+           fi.remod.pg.PGjson))
 
 (timbre/refer-timbre)
 
@@ -24,7 +25,7 @@
 (defn cast-by-meta
   [v]
   (let [m (meta v)]
-    (cond (or (:json m) (= (:tag m) clj_postgresql.PGjson)) (clj_postgresql.PGjson. v)
+    (cond (or (:json m) (= (:tag m) PGjson)) (PGjson. v)
           :else v)))
 
 ;;
@@ -41,7 +42,7 @@
         class-name (.getParameterClassName param-meta i)]
     (info "Parameter metadata" type-name class-name)
     (condp = type-name
-      "json" (clj_postgresql.PGjson. m)
+      "json" (PGjson. m)
       :else m)))
 
 (defn map-to-sqlvalue
@@ -80,7 +81,7 @@
   
   ;; PGjson already contains a clojure structure.
   ;; Return Clojure map representation of the JSON structure.
-  clj_postgresql.PGjson
+  PGjson
   (result-set-read-column [val _ _]
     @(.state val))
   

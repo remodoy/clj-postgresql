@@ -1,4 +1,4 @@
-(ns clj-postgresql.PGjson
+(ns fi.remod.pg.PGjson
   "PGjson objects are used to pass data to PostgreSQL's json fields.
    PGjson uses cheshire to serialize any clojure structure to json.
    JSON data in result sets automatically returned as PGjson objects

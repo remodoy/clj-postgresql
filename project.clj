@@ -12,7 +12,8 @@
                  [org.clojure/java.jdbc "0.3.5"]
                  [org.slf4j/slf4j-simple "1.7.7"]
                  [org.postgis/postgis-jdbc "1.3.3"]
-                 [com.taoensso/timbre "3.2.1"]
+                 [com.taoensso/timbre "3.3.0" :exclusions [org.clojure/clojure]]
                  [prismatic/schema "0.2.6"]]
-  :aot [clj-postgresql.PGjson]
+  :aot [fi.remod.pg.PGjson]
   :profiles {:dev {:dependencies [[midje "1.6.3"]]}})
+

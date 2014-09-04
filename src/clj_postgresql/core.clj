@@ -1,8 +1,7 @@
 (ns clj-postgresql.core
   "Allow using PostgreSQL from Clojure as effortlessly as possible by reading connection parameter defaults from
 PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by reading password from ~/.pgpass if available." 
-  (:require [clj-postgresql.PGjson] 
-            [clj-postgresql.types]
+  (:require [clj-postgresql.types]
             [cheshire.core :as json]
             [clojure.xml :as xml]
             [clj-postgresql.pool :refer [pooled-db close-pooled-db!] :as pool]
@@ -19,7 +18,7 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
            org.postgresql.geometric.PGpoint
            org.postgresql.geometric.PGpolygon
            org.postgis.PGgeometry
-           clj_postgresql.PGjson))
+           fi.remod.pg.PGjson))
 
 (defn getenv->map
   "Convert crazy non-map thingy which comes from (System/getenv) into a keywordized map.
