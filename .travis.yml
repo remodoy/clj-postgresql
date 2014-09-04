@@ -1,7 +1,9 @@
 language: clojure
 lein: lein2
-install: lein install
-script: lein midje
+install: lein2 install
+script: lein2 midje
+notifications:
+  irc: "irc.freenode.org#clj-postgresql"
 jdk:
   - openjdk7
   - oraclejdk7
