@@ -15,5 +15,6 @@
                  [com.taoensso/timbre "3.3.0" :exclusions [org.clojure/clojure]]
                  [prismatic/schema "0.2.6"]]
   :aot [fi.remod.pg.PGjson]
-  :profiles {:dev {:dependencies [[midje "1.6.3"]]}})
+  :profiles {:dev {:dependencies [[midje "1.6.3"]]
+                   :plugins [[lein-midje "3.1.1"]]}})
 
