@@ -1,4 +1,4 @@
-(defproject clj-postgresql "0.2.0-SNAPSHOT"
+(defproject clj-postgresql "0.3.0-SNAPSHOT"
   :description "PostgreSQL helpers for Clojure projects"
   :url "https://github.com/remodoy/clj-postgresql"
   :license {:name "Two clause BSD license"
@@ -12,9 +12,8 @@
                  [org.clojure/java.jdbc "0.3.5"]
                  [org.slf4j/slf4j-simple "1.7.7"]
                  [org.postgis/postgis-jdbc "1.3.3"]
-                 [com.taoensso/timbre "3.3.0" :exclusions [org.clojure/clojure]]
+                 [com.taoensso/timbre "3.3.1" :exclusions [org.clojure/clojure]]
                  [prismatic/schema "0.2.6"]]
-  :aot [fi.remod.pg.PGjson]
   :profiles {:dev {:dependencies [[midje "1.6.3"]]
                    :plugins [[lein-midje "3.1.1"]]}})
 

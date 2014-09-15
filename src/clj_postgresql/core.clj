@@ -17,8 +17,7 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
            org.postgresql.geometric.PGpath
            org.postgresql.geometric.PGpoint
            org.postgresql.geometric.PGpolygon
-           org.postgis.PGgeometry
-           fi.remod.pg.PGjson))
+           org.postgis.PGgeometry))
 
 (defn getenv->map
   "Convert crazy non-map thingy which comes from (System/getenv) into a keywordized map.
@@ -104,11 +103,6 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
   "Create PGmoney object"
   [amount]
   (PGmoney. ^double amount))
-
-(defn json
-  "Make PGjson object"
-  [o]
-  (PGjson. o))
 
 (defn xml
   "Make PostgreSQL XML object"
