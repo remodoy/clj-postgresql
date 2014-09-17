@@ -16,13 +16,13 @@ Add the following to the `:dependencies` section of your `project.clj` file:
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
-```
+```clj
 [clj-postgresql "0.3.0-SNAPSHOT"]
 ```
 
 [Maven](http://maven.apache.org/) dependency information:
 
-```
+```clj
 <dependency>
   <groupId>clj-postgresql</groupId>
   <artifactId>clj-postgresql</artifactId>
@@ -40,7 +40,7 @@ The pg/spec and pg/pool functions use **PGHOST**, **PGPORT**, **PGUSER** and **P
 and the *~/.pgpass* file by default. The function arguments can be used to override the connection
 parameters in the environment. E.g.:
 
-```
+```clj
 (require '[clj-postgresql.core :as pg])
 (require '[clojure.java.jdbc :as jdbc])
 
@@ -56,14 +56,14 @@ parameters in the environment. E.g.:
 
 The pool can be closed with:
 
-```
+```clj
 (pg/close! db)
 ```
 
 
 ACTUALLY DO THIS (prevent compile time resolution of connection params and initialization of the pool):
 
-```
+```clj
 (def db (delay (pg/pool)))
 (jdbc/query @db ["SELECT 1"])
 ```
@@ -84,7 +84,7 @@ Under the hood, `pg/spec` uses the following logic:
 With clj-postgresql, clojure.java.jdbc is extended to accept native clojure maps, vectors and sequences as parameter values.
 Conversion from clojure type to native SQL type is done based on the parameter type information returned by PostgreSQL.
 
-```
+```clj
 (require '[clj-postgresql :as pg])
 (require '[clojure.java.jdbc :as jdbc])
 (def db (pg/spec))
@@ -126,7 +126,7 @@ The `org.postgis.Point`, etc. are of `org.postgis.Geometry` type. They cannot be
 This library extends clojure.java.jdbc to automatically convert Geometry objects into PGgeometry when inserting and automatically convert PGgeometries to specific Geometry objects when reading from database.
 
 
-```
+```clj
 (require '[clj-postgresql.spatial :as st])
 
 (st/point 1 2)
@@ -161,13 +161,11 @@ This library extends clojure.java.jdbc to automatically convert Geometry objects
 ;=> #<MultiPolygon MULTIPOLYGON(((1 2,3 4,5 6),(7 8,9 10,11 12)),((1 2,3 4,5 6),(7 8,9 10,11 12)))>
 
 
-```
-
 
 ## PostgreSQL geometric types
 
 
-```
+```clj
 (require '[clj-postgresql.core :as pg])
 
 ;; point [x y], [pgpoint-or-str]
