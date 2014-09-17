@@ -42,6 +42,7 @@ parameters in the environment. E.g.:
 
 ```
 (require '[clj-postgresql.core :as pg])
+(require '[clojure.java.jdbc :as jdbc])
 
 (def db (pg/spec))
 (jdbc/query db ["SELECT true"])
