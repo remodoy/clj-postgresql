@@ -34,21 +34,6 @@ Add the following to the `:dependencies` section of your `project.clj` file:
 
 ## Documentation
 
-* [API docs](http://remodoy.github.io/clj-postgresql/)
-
-
-
-	(ns ...
-		(:require ...
-			[clj-postgresql.core :as pg]))
-	
-	(defonce db (pg/spec :host "localhost" :dbname "testdb" :username "myuser" :password "apassword"))
-	(jdbc/query db ["SELECT ? AS testcolumn", (pg/json {:foo "bar"})])
-
-	(defonce pool (pg/pool :host "localhost" :dbname "testdb" :username "myuser" :password "apassword"))
-	(jdbc/query pool ["SELECT 1"])
-
-
 ### Connecting to database
 
 The pg-spec and pg-pool functions use **PGHOST**, **PGPORT**, **PGUSER** and **PGDATABASE** environment variables
