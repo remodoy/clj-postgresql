@@ -16,11 +16,12 @@
   []
   (let [homedir (io/file (System/getProperty "user.home"))
         passfile (io/file homedir ".pgpass")]
-    (with-open [r (io/reader passfile)]
-      (->> r
-           line-seq
-           (map parse-pgpass-line)
-           doall))))
+    (when (.isFile passfile)
+      (with-open [r (io/reader passfile)]
+        (->> r
+             line-seq
+             (map parse-pgpass-line)
+             doall)))))
 
 (defn pgpass-matches?
   "(filter (partial pgpass-matches? spec) pgpass-lines)"

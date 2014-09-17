@@ -57,8 +57,6 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
    (pg-spec :dbname ... :host ... :port ... :user ... :password ...)"
   [& {:keys [password] :as opts}]
   {:post [(contains? % :dbname)
-          #_(contains? % :host)
-          #_(contains? % :port)
           (contains? % :user)]}
   (let [spec-opts (select-keys opts [:dbname :host :port :user])
         extra-opts (dissoc opts :dbname :host :port :user :password)

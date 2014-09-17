@@ -10,7 +10,8 @@ jdk:
 addons:
   postgresql: 9.3
 before_script:
-  - sudo apt-get update -qq
+  - psql -c 'CREATE DATABASE clj_pg_test;' postgres
 after_failure:
   - psql -c '\d' -U postgres
   - sudo cat /var/log/postgresql/postgresql-9.3-main.log
+env: PGDATABASE='clj_pg_test' PGUSER='postgres'
