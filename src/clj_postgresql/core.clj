@@ -74,6 +74,13 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
   (let [m (apply spec rest)]
     (pooled-db m {})))
 
+(defn close!
+  "Close db-spec if possible. Return true if the datasource was closeable and closed."
+  [{:keys [datasource] :as db-spec}]
+  (when (instance? java.io.Closeable datasource)
+    (.close ^java.io.Closeable datasource)
+    true))
+
 (defn tables
   [db]
   (jdbc/with-db-metadata [md db]
@@ -110,7 +117,7 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
   (object :xml (str s)))
 
 ;;
-;; Geometric Types
+;; Constructors for geometric Types
 ;;
 
 (defn point
@@ -180,6 +187,6 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
   "Create a PGpolygon object"
   [points-or-str]
   (if (coll? points-or-str)
-    (PGpolygon. (into-array PGpoint (map point points-or-str)))
+    (PGpolygon. ^"[Lorg.postgresql.geometric.PGpoint;" (into-array PGpoint (map point points-or-str)))
     (PGpolygon. ^String (str points-or-str))))
     

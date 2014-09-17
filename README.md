@@ -5,9 +5,7 @@ features is Clojure projects.
 
 - Make use of PGHOST, PGUSER and PGDATABASE when available
 - Can use ~/.pgpass for passwords
-- Implement PGjson type for PostgreSQL JDBC driver
 - Implement clojure.java.jdbc's *ISQLValue* and *IResultSetReadColumn* to coerce clojure types
-- Type hinting for SQL parameters
 
 ## Releases
 [![Continuous Integration status](https://secure.travis-ci.org/remodoy/clj-postgresql.png)](http://travis-ci.org/remodoy/clj-postgresql)
@@ -19,7 +17,7 @@ Add the following to the `:dependencies` section of your `project.clj` file:
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
 ```
-[clj-postgresql "0.2.0-SNAPSHOT"]
+[clj-postgresql "0.3.0-SNAPSHOT"]
 ```
 
 [Maven](http://maven.apache.org/) dependency information:
@@ -28,7 +26,7 @@ Add the following to the `:dependencies` section of your `project.clj` file:
 <dependency>
   <groupId>clj-postgresql</groupId>
   <artifactId>clj-postgresql</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.3.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -58,51 +56,89 @@ and the *~/.pgpass* file by default. The function arguments can be used to overr
 parameters in the environment. E.g.:
 
 ```
-(def db (delay (pg-pool :dbname "anotherdb")))
-(jdbc/query @db ["SELECT 'test'"])
+(require '[clj-postgresql.core :as pg])
+
+(def db (pg/spec))
+(jdbc/query db ["SELECT true"])
+
+(def pooled-db (pg/pool))
+(jdbc/query db ["SELECT 'hello from db'])
+
+(def db2 (pg/pool :host "db1.example.com" :user "myaccount" :dbname "anotherdb" :password "foobar"))
+(jdbc/query db2 ["SELECT 'test'"])
 ```
 
 The pool can be closed with:
 
 ```
-(close-pooled-db! @db)
+(pg/close! db)
 ```
 
-Under the hood, db-spec uses the following logic:
+
+ACTUALLY DO THIS (prevent compile time resolution of connection params and initialization of the pool):
+
+```
+(def db (delay (pg/pool)))
+(jdbc/query @db ["SELECT 1"])
+```
+
+
+
+Under the hood, `pg/spec` uses the following logic:
 
 1. Default `:dbtype` is "postgresql". Current username is used for `:dbname` and `:user` as with psql command.
 2. PGHOST, PGPORT, PGUSER and PGDATABASE environment variables override default `:host`, `:port`, `:user` and `:dbname`.
-3. `pg-spec` function arguments override params.
+3. `pg/spec` function arguments override params.
 4. If there is no `:password`, a ~/.pgpass lookup is made.
 
 
 
+## Automatic type conversions
 
-## Type hinting SQL parameters
-
-SQL Query parameters can be type hinted to convert to a proper type of PGobject.
+With clj-postgresql, clojure.java.jdbc is extended to accept native clojure maps, vectors and sequences as parameter values.
+Conversion from clojure type to native SQL type is done based on the parameter type information returned by PostgreSQL.
 
 ```
-(jdbc/insert! @db :testtable [:col1 :col2 :col3] ["foo" "bar" ^PGjson {:name "baz"}])
-
-(jdbc/query @db ["SELECT ? AS jsonthingy", ^PGjson {:foo "bar", :baz "quux"}])
-;=> ({:jsonthingy {"foo" "bar", "baz" "quux"}})
+(require '[clj-postgresql :as pg])
+(require '[clojure.java.jdbc :as jdbc])
+(def db (pg/spec))
+(jdbc/query db ["SELECT ?::int[] AS arr", [1 2 3 4]])
+; => ({:arr [1 2 3 4]})
+(jdbc/query db ["SELECT ?::json AS jsonobj" {"foo" "bar"}])
+; => ({:jsonobj {"foo" "bar"}})
+(jdbc/query db ["SELECT ?::timestamptz AS epoch" 1])
+; => ({:epoch #inst "1970-01-01T00:00:00.001000000-00:00"})
 ```
 
-The implemented meta tags are:
+### Clojure maps
 
-- `^PGjson` to wrap a clojure map into a PGjson object
-- `^:json` the same
+- `json` type parameters accept any Clojure maps
+- `geometry` columns accept GeoJSON-like Clojure maps
+- `hstore` works as before
+- Extendable multimethod to convert map to custom PostgreSQL types e.g. `(defmethod map->parameter :mytype [m _] ...)`.
 
-PG type | Clojure structures  | Meta tag
---------|---------------------|---------------------
-json    | map                 | `^PGjson`, `^:json`
+### Clojure vectors
+
+- PostgreSQL array types like `int[]`, and `text[]` (internally `_int`, `_text`, ...) accept clojure vectors as arguments.
+- `inet` type also accepts address as `[192 168 1 11]`
+- Extendable multimethod to convert vector to custom PostgreSQL types e.g. `(defmethod vec->parameter :mytype [v _] ...)`.
+
+### Sequables (e.g. lists)
+
+- Are converted to vectors
+
+## Numbers
+
+- Numeric values to `timestampt` and `timestamptz` columns are converted to `java.sql.Timestamp`.
+- Extendable multimethod to convert numeric values to custom PostgreSQL types e.g. `(defmethod num->parameter :mytype [num _] ...)`.
 
 
 
-## PostGIS type
+## PostGIS types
 
-The `org.postgis.Point`, etc. are of `org.postgis.Geometry` type. They cannot be directly used as query parameters without first wrapping them to `PGgeometry`. This library extends clojure.java.jdbc to automatically convert Geometry objects into PGgeometry when inserting and automatically convert PGgeometries to specific Geometry objects when reading from database.
+The `org.postgis.Point`, etc. are of `org.postgis.Geometry` type. They cannot be directly used as query parameters without first wrapping them to `PGgeometry`.
+This library extends clojure.java.jdbc to automatically convert Geometry objects into PGgeometry when inserting and automatically convert PGgeometries to specific Geometry objects when reading from database.
+
 
 ```
 (require '[clj-postgresql.spatial :as st])
@@ -143,8 +179,6 @@ The `org.postgis.Point`, etc. are of `org.postgis.Geometry` type. They cannot be
 
 
 ## PostgreSQL geometric types
-
-
 
 
 ```
@@ -210,12 +244,6 @@ The `org.postgis.Point`, etc. are of `org.postgis.Geometry` type. They cannot be
 
 ```
 
-
-## Roadmap
-
-- Travis builds
-- API docs
-- PostGIS support
 
 # License
 
