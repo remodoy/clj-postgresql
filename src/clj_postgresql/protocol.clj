@@ -1,4 +1,5 @@
 (ns clj-postgresql.protocol
+  (:use [clojure.pprint])
   (:import [java.net Socket]
            [java.io InputStream OutputStream ObjectInputStream ObjectOutputStream]
            [java.nio ByteBuffer]
@@ -178,17 +179,17 @@
     (send! sc (startup-message {:user "postgres" :database "postgres"}))
     (let [auth-salt (recv! sc)]
       (send! sc (password-message (md5-auth auth-salt "postgres" "qRoJXpy"))))
-    (>pprint
+    (pprint
      (loop [preamble []]
        (let [msg (recv! sc)]
          (if (= (:type msg) :ready-for-query)
            [msg preamble]
            (recur (conj preamble msg))))))
     (send! sc (query-message "SELECT '{}'::json AS foo"))
-    (>pprint (recv! sc))
-    (>pprint (recv! sc))
-    (>pprint (recv! sc))
-    (>pprint (recv! sc))
+    (pprint (recv! sc))
+    (pprint (recv! sc))
+    (pprint (recv! sc))
+    (pprint (recv! sc))
     (send! sc (terminate-message))))
 
 
