@@ -1,7 +1,8 @@
 (ns clj-postgresql.t-core
   (:use midje.sweet)
   (:require [clj-postgresql.core :as pg]
-            [clojure.java.jdbc :as jdbc]))
+            [clojure.java.jdbc :as jdbc])
+  (:import [java.net InetAddress]))
 
 (defn query
   [& args]
@@ -30,4 +31,6 @@
       (query1 "SELECT ?::json AS x" {:foo {:bar 1}}) => {:x {"foo" {"bar" 1}}}
       (query1 "SELECT ?::int[] AS x" [1 2 7 6 5]) => {:x [1 2 7 6 5]}
       (query1 "SELECT ?::text[] AS x" '("a" "b" "c" "d" "e")) => {:x ["a" "b" "c" "d" "e"]}
-      (query1 "SELECT ?::varchar[] AS x" ["a" 1 "B" 2.0]) => {:x ["a" "1" "B" "2.0"]})
+      (query1 "SELECT ?::varchar[] AS x" ["a" 1 "B" 2.0]) => {:x ["a" "1" "B" "2.0"]}
+      (query1 "SELECT ?::inet AS x" (InetAddress/getByName "127.0.0.1")) => {:x "127.0.0.1"}
+      (query1 "SELECT ?::inet AS x" (InetAddress/getByName "::1")) => {:x "::1"})

@@ -167,6 +167,13 @@
       (.setObject s i (num->parameter num type-name)))))
 
 
+;; Inet addresses
+(extend-protocol clojure.java.jdbc/ISQLParameter
+  java.net.InetAddress
+  (set-parameter [^java.net.InetAddress inet-addr ^java.sql.PreparedStatement s ^long i]
+    (.setObject s i (doto (PGobject.)
+                      (.setType "inet")
+                      (.setValue (.getHostAddress inet-addr))))))
 
 ;;;;
 ;;
