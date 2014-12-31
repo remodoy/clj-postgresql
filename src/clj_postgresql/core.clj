@@ -33,12 +33,18 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
 
 (defn default-spec
   "Reasonable defaults as with the psql command line tool.
-   Use username for user and db. Don't use host."
+  Use username for user and db. Don't use host."
   []
-  (let [username (java.lang.System/getProperty "user.name")]
-    {:dbtype "postgresql"
-     :user username
-     :dbname username}))
+  (let [username (or (System/getenv "PGUSER")
+                     (java.lang.System/getProperty "user.name"))]
+    (conj
+      {:dbtype "postgresql"
+       :user username
+       :dbname username}
+      (when-let [password (System/getenv "PGPASSWORD")]
+        {:password password})
+      (when-let [dbname (System/getenv "PGDATABASE")]
+        {:dbname dbname}))))
 
 (defn env-spec
   "Get db spec by reading PG* variables from the environment."
