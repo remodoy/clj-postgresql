@@ -89,11 +89,19 @@
   [m _]
   (jdbc/sql-value (coerce/geojson->postgis m)))
 
+(defn- to-pg-json [data json-type]
+  (doto (PGobject.)
+    (.setType (name json-type))
+    (.setValue (json/generate-string data))))
+
 (defmethod map->parameter :json
   [m _]
-  (doto (PGobject.)
-    (.setType "json")
-    (.setValue (json/generate-string m))))
+  (to-pg-json m :json))
+
+(defmethod map->parameter :jsonb
+  [m _]
+  (to-pg-json m :jsonb))
+
               
 (extend-protocol jdbc/ISQLParameter
   clojure.lang.IPersistentMap
@@ -224,6 +232,13 @@
   [^org.postgresql.util.PGobject x]
   (when-let [val (.getValue x)]
     (json/parse-string val)))
+
+(defmethod read-pgobject :jsonb
+  [^org.postgresql.util.PGobject x]
+  (when-let [val (.getValue x)]
+    (json/parse-string val)))
+
+
 
 (defmethod read-pgobject :default
   [^org.postgresql.util.PGobject x]
