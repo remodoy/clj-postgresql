@@ -21,6 +21,7 @@
       (query1 "SELECT '{a,b}'::text[] AS x") => {:x ["a" "b"]}
       (query1 "SELECT '{a,b}'::text[]::anyarray AS x") => {:x ["a" "b"]}
       (query1 "SELECT '{\"foo\":1}'::json AS x") => {:x {"foo" 1}}
+      (query1 "SELECT '{\"foo\":1}'::jsonb AS x") => {:x {"foo" 1}}
       (query1 "SELECT 'CaMeL' AS x") => {:x "CaMeL"})
 
 (fact "Data type parameters work"
@@ -29,6 +30,8 @@
       (query1 "SELECT true AS x WHERE 'a'::text = ?" "a") => {:x true}
       (query1 "SELECT ?::json AS x" {"foo" {"bar" 1}}) => {:x {"foo" {"bar" 1}}}
       (query1 "SELECT ?::json AS x" {:foo {:bar 1}}) => {:x {"foo" {"bar" 1}}}
+      (query1 "SELECT ?::jsonb AS x" {"foo" {"bar" 1}}) => {:x {"foo" {"bar" 1}}}
+      (query1 "SELECT ?::jsonb AS x" {:foo {:bar 1}}) => {:x {"foo" {"bar" 1}}}
       (query1 "SELECT ?::int[] AS x" [1 2 7 6 5]) => {:x [1 2 7 6 5]}
       (query1 "SELECT ?::text[] AS x" '("a" "b" "c" "d" "e")) => {:x ["a" "b" "c" "d" "e"]}
       (query1 "SELECT ?::varchar[] AS x" ["a" 1 "B" 2.0]) => {:x ["a" "1" "B" "2.0"]}
