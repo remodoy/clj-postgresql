@@ -1,7 +1,7 @@
 # clj-postgresql
 
 A Clojure library designed to help using more advanced PostgreSQL
-features is Clojure projects.
+features in Clojure projects.
 
 - Make use of PGHOST, PGUSER and PGDATABASE when available
 - Can use ~/.pgpass for passwords
