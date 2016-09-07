@@ -159,6 +159,7 @@ This library extends clojure.java.jdbc to automatically convert Geometry objects
 
 (st/multi-polygon [[[[1 2] [3 4] [5 6]] [[7 8] [9 10] [11 12]]] [[[1 2] [3 4] [5 6]] [[7 8] [9 10] [11 12]]]])
 ;=> #<MultiPolygon MULTIPOLYGON(((1 2,3 4,5 6),(7 8,9 10,11 12)),((1 2,3 4,5 6),(7 8,9 10,11 12)))>
+```
 
 
 
@@ -188,7 +189,7 @@ This library extends clojure.java.jdbc to automatically convert Geometry objects
 (pg/box [1 2] [3 4])
 ;=> #<PGbox (1.0,2.0),(3.0,4.0)>
 
-;; circle [x y r], [point r], [pgcircle-or-str] 
+;; circle [x y r], [point r], [pgcircle-or-str]
 (pg/circle 25.0 30.0 5)
 ;=> #<PGcircle <(25.0,30.0),5.0>>
 (pg/circle [25 30] 5)
