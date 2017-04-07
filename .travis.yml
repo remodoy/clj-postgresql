@@ -1,4 +1,4 @@
-dist: trusty
+dist: precise
 sudo: false
 language: clojure
 lein: lein2
@@ -10,11 +10,11 @@ jdk:
 services:
   - postgresql
 addons:
-  postgresql: 9.6
+  postgresql: 9.4
 before_script:
   - psql -U postgres -c 'CREATE DATABASE clj_pg_test;' postgres
   - psql -U postgres -c 'CREATE EXTENSION postgis;' clj_pg_test
 after_failure:
   - psql -c '\d' -U postgres
-  - cat /var/log/postgresql/postgresql-9.6-main.log
+  - cat /var/log/postgresql/postgresql-9.4-main.log
 env: PGDATABASE='clj_pg_test' PGUSER='postgres'
