@@ -4,11 +4,9 @@ script: lein2 midje
 notifications:
   irc: "irc.freenode.org#clj-postgresql"
 jdk:
-  - openjdk7
-  - oraclejdk7
   - oraclejdk8
 addons:
-  postgresql: 9.3
+  postgresql: 9.6
 before_script:
   - psql -c 'CREATE DATABASE clj_pg_test;' postgres
 after_failure:
