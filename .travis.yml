@@ -5,11 +5,14 @@ notifications:
   irc: "irc.freenode.org#clj-postgresql"
 jdk:
   - oraclejdk8
+services:
+  - postgresql
 addons:
-  postgresql: 9.6
+  postgresql: 9.5
 before_script:
-  - psql -c 'CREATE DATABASE clj_pg_test;' postgres
+  - psql -U postgres -c 'CREATE DATABASE clj_pg_test'
+  - psql -U postgres -c 'CREATE EXTENSION postgis'
 after_failure:
   - psql -c '\d' -U postgres
-  - sudo cat /var/log/postgresql/postgresql-9.3-main.log
+  - sudo cat /var/log/postgresql/postgresql-9.5-main.log
 env: PGDATABASE='clj_pg_test' PGUSER='postgres'
