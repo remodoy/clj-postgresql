@@ -5,13 +5,10 @@
   (:require [clj-postgresql.coerce :as coerce] 
             [clojure.java.jdbc :as jdbc]
             [clojure.xml :as xml]
-            [taoensso.timbre :as timbre]
             [cheshire.core :as json])
   (:import [org.postgresql.util PGobject]
            [org.postgis Geometry PGgeometry PGgeometryLW]
            [java.sql PreparedStatement ParameterMetaData]))
-
-(timbre/refer-timbre)
 
 ;;
 ;; Helpers
