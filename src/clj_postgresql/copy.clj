@@ -1,2 +1,0 @@
-(ns clj-postgresql.copy)
-
