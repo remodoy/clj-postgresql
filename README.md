@@ -17,7 +17,7 @@ Add the following to the `:dependencies` section of your `project.clj` file:
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
 ```clj
-[clj-postgresql "0.7.0-SNAPSHOT"]
+[clj-postgresql "0.7.0"]
 ```
 
 [Maven](http://maven.apache.org/) dependency information:
