@@ -114,6 +114,14 @@
 
 (defmulti vec->parameter parameter-dispatch-fn)
 
+(defmethod vec->parameter :json
+  [v _]
+  (to-pg-json v :json))
+
+(defmethod vec->parameter :jsonb
+  [v _]
+  (to-pg-json v :jsonb))
+
 (defmethod vec->parameter :inet
   [v _]
   (if (= (count v) 4)
