@@ -1,12 +1,12 @@
 (ns clj-postgresql.protocol
-  (:use [clojure.pprint])
   (:import [java.net Socket]
            [java.io InputStream OutputStream ObjectInputStream ObjectOutputStream]
            [java.nio ByteBuffer]
            [java.nio.charset Charset]
            [java.nio.channels SocketChannel]
            [java.net InetSocketAddress]
-           [java.security MessageDigest]))
+           [java.security MessageDigest])
+  (:require [clojure.pprint :as pp]))
 
 (def ^:constant ^Charset UTF-8 (Charset/forName "UTF-8"))
 
@@ -175,17 +175,17 @@
     (send! sc (startup-message {:user "postgres" :database "postgres"}))
     (let [auth-salt (recv! sc)]
       (send! sc (password-message (md5-auth auth-salt "postgres" "qRoJXpy"))))
-    (pprint
+    (pp/pprint
      (loop [preamble []]
        (let [msg (recv! sc)]
          (if (= (:type msg) :ready-for-query)
            [msg preamble]
            (recur (conj preamble msg))))))
     (send! sc (query-message "SELECT '{}'::json AS foo"))
-    (pprint (recv! sc))
-    (pprint (recv! sc))
-    (pprint (recv! sc))
-    (pprint (recv! sc))
+    (pp/pprint (recv! sc))
+    (pp/pprint (recv! sc))
+    (pp/pprint (recv! sc))
+    (pp/pprint (recv! sc))
     (send! sc (terminate-message))))
 
 ;; startup
