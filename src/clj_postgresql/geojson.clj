@@ -114,7 +114,7 @@
   [& coords]
   {:post [(s/validate Point %)]}
   {:type :Point
-   :coordinates (into [] coords)})
+   :coordinates (vec coords)})
 
 (defn multi-point
   [points]

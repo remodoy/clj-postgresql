@@ -17,7 +17,7 @@
       (if (string? a)
         (.update md ^bytes (.getBytes ^String a ^Charset UTF-8))
         (.update md ^bytes a)))
-    (apply str (map #(String/format "%02x" (into-array Object [%])) (.digest md)))))
+    (clojure.string/join (map (fn* [p1__418377#] (String/format "%02x" (into-array Object [p1__418377#]))) (.digest md)))))
 
 (defn int32
   [n]
@@ -37,7 +37,7 @@
 (defn string
   [s]
   (let [bytes (.getBytes ^String (str s) ^Charset UTF-8)]
-    (doto (ByteBuffer/allocate (+ (alength ^bytes bytes) 1))
+    (doto (ByteBuffer/allocate (inc (alength bytes)))
       (.put ^bytes bytes)
       (.put (byte 0)))))
 
@@ -96,7 +96,7 @@
   [^ByteBuffer bb]
   (loop [bytes []]
     (let [x (.get bb)]
-      (if (= x 0)
+      (if (zero? x)
         (String. (byte-array bytes))
         (recur (conj bytes x))))))
 
@@ -144,11 +144,7 @@
      :values (for [i (range cols)]
                (let [len (.getInt bb)]
                  {:len len
-                  :val (if (> len 0)
-                         (let [bytea (byte-array len)]
-                           (.get bb ^bytes bytea)
-                           bytea)
-                         nil)}))}))
+                  :val (when (pos? len) (let [bytea (byte-array len)] (.get bb bytea) bytea))}))}))
 (defmethod response (int \C)
   [_ len ^ByteBuffer bb]
   {:type :command-complete
