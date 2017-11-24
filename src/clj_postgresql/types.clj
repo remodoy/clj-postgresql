@@ -15,8 +15,8 @@
 ;;
 
 (defn pmd
-  [^java.sql.ParameterMetaData md i]
   "Convert ParameterMetaData to a map."
+  [^java.sql.ParameterMetaData md i]
   {:parameter-class (.getParameterClassName md i)
    :parameter-mode (.getParameterMode md i)
    :parameter-type (.getParameterType md i)
