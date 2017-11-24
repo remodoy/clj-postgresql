@@ -13,19 +13,19 @@
 
 (defmethod geojson->postgis :LineString
   [m]
-  (st/line-string (:coordinates m)))  
+  (st/line-string (:coordinates m)))
 
 (defmethod geojson->postgis :MultiLineString
   [m]
-  (st/multi-line-string (:coordinates m)))  
+  (st/multi-line-string (:coordinates m)))
 
 (defmethod geojson->postgis :Polygon
   [m]
-  (st/polygon (:coordinates m)))  
+  (st/polygon (:coordinates m)))
 
 (defmethod geojson->postgis :MultiPolygon
   [m]
-  (st/multi-polygon (:coordinates m)))  
+  (st/multi-polygon (:coordinates m)))
 
 (defprotocol PostgisToCoords
   (postgis->coords [o]))
@@ -54,7 +54,7 @@
   org.postgis.MultiPolygon
   (postgis->coords [o]
     (mapv postgis->coords (.getPolygons o))))
-      
+
 (defprotocol PostgisToGeoJSON
   (postgis->geojson [o]))
 
@@ -83,4 +83,3 @@
   (postgis->geojson [o]
     {:type :MultiPolygon
      :coordinates (postgis->coords o)}))
-  

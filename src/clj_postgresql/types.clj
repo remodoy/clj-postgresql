@@ -2,7 +2,7 @@
   "Participate in clojure.java.jdbc's ISQLValue and IResultSetReadColumn protocols
    to allow using PostGIS geometry types without the PGgeometry wrapper, support the
    PGjson type and allow coercing clojure structures into PostGIS types."
-  (:require [clj-postgresql.coerce :as coerce] 
+  (:require [clj-postgresql.coerce :as coerce]
             [clojure.java.jdbc :as jdbc]
             [clojure.xml :as xml]
             [cheshire.core :as json])
@@ -98,8 +98,6 @@
 (defmethod map->parameter :jsonb
   [m _]
   (to-pg-json m :jsonb))
-
-              
 (extend-protocol jdbc/ISQLParameter
   clojure.lang.IPersistentMap
   (set-parameter [m ^PreparedStatement s ^long i]
@@ -171,7 +169,6 @@
           type-name (.getParameterTypeName meta i)]
       (.setObject s i (num->parameter num type-name)))))
 
-
 ;; Inet addresses
 (extend-protocol clojure.java.jdbc/ISQLParameter
   java.net.InetAddress
@@ -205,7 +202,7 @@
       (if-not (empty? content)
         (clojure.string/split content #"\s*,\s*")
         []))))
-  
+
 (defmulti read-pgobject
   "Convert returned PGobject to Clojure value."
   #(keyword (when % (.getType ^org.postgresql.util.PGobject %))))
@@ -235,8 +232,6 @@
   (when-let [val (.getValue x)]
     (json/parse-string val)))
 
-
-
 (defmethod read-pgobject :default
   [^org.postgresql.util.PGobject x]
   (.getValue x))
@@ -245,17 +240,17 @@
 ;; Extend clojure.java.jdbc's protocol for interpreting ResultSet column values.
 ;;
 (extend-protocol jdbc/IResultSetReadColumn
-  
+
   ;; Return the PostGIS geometry object instead of PGgeometry wrapper
   org.postgis.PGgeometry
   (result-set-read-column [val _ _]
     (coerce/postgis->geojson (.getGeometry val)))
-  
+
   ;; Parse SQLXML to a Clojure map representing the XML content
   java.sql.SQLXML
   (result-set-read-column [val _ _]
     (xml/parse (.getBinaryStream val)))
-  
+
   ;; Covert java.sql.Array to Clojure vector
   java.sql.Array
   (result-set-read-column [val _ _]

@@ -102,10 +102,10 @@
 (defn schema-pred
   [schema m]
   (try (s/validate schema m)
-    true
-    (catch Exception e
-      false)))
-    
+       true
+       (catch Exception e
+         false)))
+
 (defn point?
   [m]
   (schema-pred Point m))
@@ -122,5 +122,4 @@
    :post [(s/validate MultiPoint %)]}
   {:type :MultiPoint
    :coordinates nil})
-  
-  
+

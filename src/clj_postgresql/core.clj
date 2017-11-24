@@ -1,6 +1,6 @@
 (ns clj-postgresql.core
   "Allow using PostgreSQL from Clojure as effortlessly as possible by reading connection parameter defaults from
-PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by reading password from ~/.pgpass if available." 
+  PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by reading password from ~/.pgpass if available."
   (:require [clj-postgresql.types]
             [cheshire.core :as json]
             [clojure.xml :as xml]
@@ -21,19 +21,19 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
 
 (defn getenv->map
   "Convert crazy non-map thingy which comes from (System/getenv) into a keywordized map.
-   If no argument given, fetch env with (System/getenv)."
+  If no argument given, fetch env with (System/getenv)."
   ([x]
-    {:pre [(= (type x) java.util.Collections$UnmodifiableMap)]
-     :post [(map? %)]}
-    (zipmap
-      (map keyword (keys x))
-      (vals x)))
+   {:pre [(= (type x) java.util.Collections$UnmodifiableMap)]
+    :post [(map? %)]}
+   (zipmap
+    (map keyword (keys x))
+    (vals x)))
   ([]
-    (getenv->map (System/getenv))))
+   (getenv->map (System/getenv))))
 
 (defn default-spec
   "Reasonable defaults as with the psql command line tool.
-   Use username for user and db. Don't use host."
+  Use username for user and db. Don't use host."
   []
   (let [username (java.lang.System/getProperty "user.name")]
     {:dbtype "postgresql"
@@ -46,15 +46,15 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
   {:pre [(map? env)]
    :post [(map? %)]}
   (cond-> {}
-          PGDATABASE (assoc :dbname PGDATABASE)
-          PGHOST (assoc :host PGHOST)
-          PGPORT (assoc :port PGPORT)
-          PGUSER (assoc :user PGUSER)))
+    PGDATABASE (assoc :dbname PGDATABASE)
+    PGHOST (assoc :host PGHOST)
+    PGPORT (assoc :port PGPORT)
+    PGUSER (assoc :user PGUSER)))
 
 (defn spec
   "Create database spec for PostgreSQL. Uses PG* environment variables by default
-   and acceps options in the form:
-   (pg-spec :dbname ... :host ... :port ... :user ... :password ...)"
+  and acceps options in the form:
+  (pg-spec :dbname ... :host ... :port ... :user ... :password ...)"
   [& {:keys [password] :as opts}]
   {:post [(contains? % :dbname)
           (contains? % :user)]}
@@ -65,7 +65,7 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
                        spec-opts)
         password (or password (pgpass/pgpass-lookup db-spec))]
     (cond-> (merge extra-opts db-spec)
-            password (assoc :password password))))
+      password (assoc :password password))))
 
 (defn pool
   [& rest]
@@ -83,9 +83,9 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
   [db]
   (jdbc/with-db-metadata [md db]
     (->> (doall (jdbc/metadata-result (.getTables md nil nil nil (into-array ["TABLE"]))))
-      (map :table_name)
-      (map keyword)
-      (set))))
+         (map :table_name)
+         (map keyword)
+         (set))))
 
 ;;
 ;; Types
@@ -121,65 +121,65 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
 (defn point
   "Create a PGpoint object"
   ([x y]
-    (PGpoint. x y))
+   (PGpoint. x y))
   ([obj]
-    (cond
-      (instance? PGpoint obj) obj
-      (coll? obj) (point (first obj) (second obj))
-      :else (PGpoint. (str obj)))))
+   (cond
+     (instance? PGpoint obj) obj
+     (coll? obj) (point (first obj) (second obj))
+     :else (PGpoint. (str obj)))))
 
 (defn box
   "Create a PGbox object"
   ([p1 p2]
-    (PGbox. (point p1) (point p2)))
+   (PGbox. (point p1) (point p2)))
   ([x1 y1 x2 y2]
-    (PGbox. x1 y1 x2 y2))
+   (PGbox. x1 y1 x2 y2))
   ([obj]
-    (if (instance? PGbox obj)
-      obj
-      (PGbox. (str obj)))))
+   (if (instance? PGbox obj)
+     obj
+     (PGbox. (str obj)))))
 
 (defn circle
   "Create a PGcircle object"
   ([x y r]
-    (PGcircle. x y r))
+   (PGcircle. x y r))
   ([center-point r]
-    (PGcircle. (point center-point) r))
+   (PGcircle. (point center-point) r))
   ([obj]
-    (if (instance? PGcircle obj)
-      obj
-      (PGcircle. (str obj)))))
+   (if (instance? PGcircle obj)
+     obj
+     (PGcircle. (str obj)))))
 
 (defn line
   "Create a PGline object"
   ([x1 y1 x2 y2]
-    (PGline. x1 y1 x2 y2))
+   (PGline. x1 y1 x2 y2))
   ([p1 p2]
-    (PGline. (point p1) (point p2)))
+   (PGline. (point p1) (point p2)))
   ([obj]
-    (if (instance? PGline obj)
-      obj
-      (PGline. (str obj)))))
+   (if (instance? PGline obj)
+     obj
+     (PGline. (str obj)))))
 
 (defn lseg
   "Create a PGlseg object"
   ([x1 y1 x2 y2]
-    (PGlseg. x1 y1 x2 y2))
+   (PGlseg. x1 y1 x2 y2))
   ([p1 p2]
-    (PGlseg. (point p1) (point p2)))
+   (PGlseg. (point p1) (point p2)))
   ([obj]
-    (if (instance? PGlseg obj)
-      obj
-      (PGlseg. (str obj)))))
-    
+   (if (instance? PGlseg obj)
+     obj
+     (PGlseg. (str obj)))))
+
 (defn path
   "Create a PGpath object"
   ([points open?]
-    (PGpath. (into-array PGpoint (map point points)) open?))
+   (PGpath. (into-array PGpoint (map point points)) open?))
   ([obj]
-    (if (instance? PGpath obj)
-      obj
-      (PGpath. (str obj)))))
+   (if (instance? PGpath obj)
+     obj
+     (PGpath. (str obj)))))
 
 (defn polygon
   "Create a PGpolygon object"
@@ -187,4 +187,3 @@ PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by readi
   (if (coll? points-or-str)
     (PGpolygon. ^"[Lorg.postgresql.geometric.PGpoint;" (into-array PGpoint (map point points-or-str)))
     (PGpolygon. ^String (str points-or-str))))
-    

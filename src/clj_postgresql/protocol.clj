@@ -157,9 +157,9 @@
 (defn send!
   [^SocketChannel sc bufs]
   (as-> bufs x
-        (map #(.rewind ^ByteBuffer %) x)
-        (into-array ByteBuffer x)
-        (.write sc ^"[Ljava.nio.ByteBuffer;" x)))
+    (map #(.rewind ^ByteBuffer %) x)
+    (into-array ByteBuffer x)
+    (.write sc ^"[Ljava.nio.ByteBuffer;" x)))
 
 (defn recv!
   [^SocketChannel sc]
@@ -172,7 +172,7 @@
       (.read sc ^ByteBuffer content-bb)
       (.rewind content-bb)
       (response type len content-bb))))
-      
+
 (defn converse
   []
   (with-open [sc (SocketChannel/open (InetSocketAddress. "127.0.0.1" 5432))]
@@ -191,7 +191,6 @@
     (pprint (recv! sc))
     (pprint (recv! sc))
     (send! sc (terminate-message))))
-
 
 ;; startup
 ;; ReadyForQuery
@@ -262,7 +261,6 @@
 ;; Cancel by opening new conn and using secret key - BackendKeyData in startup:
 ;; (CancelRequest pid key)
 ;;
-
 
 
 ;;

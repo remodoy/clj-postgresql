@@ -17,6 +17,5 @@
          (let [row  (first (jdbc/query tx (str "SELECT * FROM " test-table-name)))]
            (fact row => truthy)
            (fact (:json_field row) => test-data)
-           (fact (:jsonb_field row) => test-data)
-           )))
+           (fact (:jsonb_field row) => test-data))))
 
