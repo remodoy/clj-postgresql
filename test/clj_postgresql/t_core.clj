@@ -12,7 +12,7 @@
   [& args]
   (let [result (apply query args)]
     (first result)))
-      
+
 (fact "Parsing data types works"
       (query1 "SELECT true AS x") => {:x true}
       (query1 "SELECT false AS x") => {:x false}

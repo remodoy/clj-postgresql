@@ -1,10 +1,10 @@
 (ns clj-postgresql.geometric.Point
   "Example implementation of a PGobject that also implements
-   Clojure's ISeq and shows as a sequence of two numbers."  
+   Clojure's ISeq and shows as a sequence of two numbers."
   (:gen-class
-    :extends org.postgresql.geometric.PGpoint
-    :implements [clojure.lang.Counted clojure.lang.ISeq]
-    :main false))
+   :extends org.postgresql.geometric.PGpoint
+   :implements [clojure.lang.Counted clojure.lang.ISeq]
+   :main false))
 
 (defn to-list
   [^org.postgresql.geometric.PGpoint this]

@@ -6,7 +6,7 @@
   "Returns the set SRID of a geometry object"
   [^Geometry geometry]
   (.getSrid geometry))
-  
+
 (defn with-srid!
   "Return the geometry object with SRID set. Alters the object."
   [^Geometry geometry srid]
@@ -20,21 +20,21 @@
            (>= (count x) 2)
            (<= (count x) 3)
            (every? number? (map number? x)))))
-  
+
 (defn point
   "Make a 2D or 3D Point."
   ([x y]
-    (Point. x y))
+   (Point. x y))
   ([x y z]
-    (Point. x y z))
+   (Point. x y z))
   ([coll-or-str]
-    (cond (instance? Point coll-or-str) coll-or-str
-          (coll? coll-or-str) (let [x (first coll-or-str)
-                                    y (second coll-or-str)]
-                                (if-let [z (nth coll-or-str 2 nil)]
-                                  (Point. x y z)
-                                  (Point. x y)))
-          :else (Point. (str coll-or-str)))))
+   (cond (instance? Point coll-or-str) coll-or-str
+         (coll? coll-or-str) (let [x (first coll-or-str)
+                                   y (second coll-or-str)]
+                               (if-let [z (nth coll-or-str 2 nil)]
+                                 (Point. x y z)
+                                 (Point. x y)))
+         :else (Point. (str coll-or-str)))))
 
 (defn multi-point
   "Make a MultiPoint from collection of Points."

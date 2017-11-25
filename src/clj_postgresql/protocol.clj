@@ -1,12 +1,12 @@
 (ns clj-postgresql.protocol
-  (:use [clojure.pprint])
   (:import [java.net Socket]
            [java.io InputStream OutputStream ObjectInputStream ObjectOutputStream]
            [java.nio ByteBuffer]
            [java.nio.charset Charset]
            [java.nio.channels SocketChannel]
            [java.net InetSocketAddress]
-           [java.security MessageDigest]))
+           [java.security MessageDigest])
+  (:require [clojure.pprint :as pp]))
 
 (def ^:constant ^Charset UTF-8 (Charset/forName "UTF-8"))
 
@@ -17,7 +17,7 @@
       (if (string? a)
         (.update md ^bytes (.getBytes ^String a ^Charset UTF-8))
         (.update md ^bytes a)))
-    (apply str (map #(String/format "%02x" (into-array Object [%])) (.digest md)))))
+    (clojure.string/join (map (fn* [p1__418377#] (String/format "%02x" (into-array Object [p1__418377#]))) (.digest md)))))
 
 (defn int32
   [n]
@@ -37,7 +37,7 @@
 (defn string
   [s]
   (let [bytes (.getBytes ^String (str s) ^Charset UTF-8)]
-    (doto (ByteBuffer/allocate (+ (alength ^bytes bytes) 1))
+    (doto (ByteBuffer/allocate (inc (alength bytes)))
       (.put ^bytes bytes)
       (.put (byte 0)))))
 
@@ -96,7 +96,7 @@
   [^ByteBuffer bb]
   (loop [bytes []]
     (let [x (.get bb)]
-      (if (= x 0)
+      (if (zero? x)
         (String. (byte-array bytes))
         (recur (conj bytes x))))))
 
@@ -144,11 +144,7 @@
      :values (for [i (range cols)]
                (let [len (.getInt bb)]
                  {:len len
-                  :val (if (> len 0)
-                         (let [bytea (byte-array len)]
-                           (.get bb ^bytes bytea)
-                           bytea)
-                         nil)}))}))
+                  :val (when (pos? len) (let [bytea (byte-array len)] (.get bb bytea) bytea))}))}))
 (defmethod response (int \C)
   [_ len ^ByteBuffer bb]
   {:type :command-complete
@@ -157,9 +153,9 @@
 (defn send!
   [^SocketChannel sc bufs]
   (as-> bufs x
-        (map #(.rewind ^ByteBuffer %) x)
-        (into-array ByteBuffer x)
-        (.write sc ^"[Ljava.nio.ByteBuffer;" x)))
+    (map #(.rewind ^ByteBuffer %) x)
+    (into-array ByteBuffer x)
+    (.write sc ^"[Ljava.nio.ByteBuffer;" x)))
 
 (defn recv!
   [^SocketChannel sc]
@@ -172,26 +168,25 @@
       (.read sc ^ByteBuffer content-bb)
       (.rewind content-bb)
       (response type len content-bb))))
-      
+
 (defn converse
   []
   (with-open [sc (SocketChannel/open (InetSocketAddress. "127.0.0.1" 5432))]
     (send! sc (startup-message {:user "postgres" :database "postgres"}))
     (let [auth-salt (recv! sc)]
       (send! sc (password-message (md5-auth auth-salt "postgres" "qRoJXpy"))))
-    (pprint
+    (pp/pprint
      (loop [preamble []]
        (let [msg (recv! sc)]
          (if (= (:type msg) :ready-for-query)
            [msg preamble]
            (recur (conj preamble msg))))))
     (send! sc (query-message "SELECT '{}'::json AS foo"))
-    (pprint (recv! sc))
-    (pprint (recv! sc))
-    (pprint (recv! sc))
-    (pprint (recv! sc))
+    (pp/pprint (recv! sc))
+    (pp/pprint (recv! sc))
+    (pp/pprint (recv! sc))
+    (pp/pprint (recv! sc))
     (send! sc (terminate-message))))
-
 
 ;; startup
 ;; ReadyForQuery
@@ -262,7 +257,6 @@
 ;; Cancel by opening new conn and using secret key - BackendKeyData in startup:
 ;; (CancelRequest pid key)
 ;;
-
 
 
 ;;
