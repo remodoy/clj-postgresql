@@ -48,7 +48,7 @@ parameters in the environment. E.g.:
 (jdbc/query db ["SELECT true"])
 
 (def pooled-db (pg/pool))
-(jdbc/query db ["SELECT 'hello from db'"])
+(jdbc/query pooled-db ["SELECT 'hello from db'"])
 
 (def db2 (pg/pool :host "db1.example.com" :user "myaccount" :dbname "anotherdb" :password "foobar"))
 (jdbc/query db2 ["SELECT 'test'"])
