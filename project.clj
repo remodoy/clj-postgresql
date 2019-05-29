@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.postgresql/postgresql "42.2.5"]
                  [net.postgis/postgis-jdbc "2.3.0" :exclusions [postgresql org.postgresql/postgresql]]
+                 [hikari-cp "2.7.1"]
                  [cheshire "5.8.1"]
                  [com.jolbox/bonecp "0.8.0.RELEASE"]
                  [clj-time "0.15.1"]
