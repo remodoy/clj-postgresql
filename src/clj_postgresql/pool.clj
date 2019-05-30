@@ -1,13 +1,11 @@
 (ns clj-postgresql.pool
-  "BoneCP based connection pool"
+  "Hikari based connection pool"
   (:require [clojure.java.data :as data]
             [hikari-cp.core :as hikari])
-  (:import (com.jolbox.bonecp BoneCPDataSource BoneCPConfig ConnectionHandle)
-           (com.jolbox.bonecp.hooks AbstractConnectionHook)
-           (java.util.concurrent TimeUnit)))
+  (:import (java.util.concurrent TimeUnit)))
 
 (defn db-spec->pool-config
-  "Converts a db-spec with :host :port :dbname and :user to bonecp pool config"
+  "Converts a db-spec with :host :port :dbname and :user to Hikari pool config"
   [{:keys [dbtype host port dbname user password]}]
   (let [host-part (when host (if port (format "%s:%s" host port) host))
         pool-conf {:jdbc-url (format "jdbc:%s://%s/%s" dbtype (or host-part "") dbname)
@@ -23,4 +21,4 @@
 
 (defn close-pooled-db!
   [{:keys [datasource]}]
-  (.close ^BoneCPDataSource datasource))
+  (hikari/close-datasource datasource))
