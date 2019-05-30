@@ -3,7 +3,7 @@
   :url "https://github.com/remodoy/clj-postgresql"
   :license {:name "Two clause BSD license"
             :url "http://github.com/remodoy/clj-postgresql/README.md"}
-  :dependencies [[org.clojure/clojure "1.8.0"]
+  :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.postgresql/postgresql "42.2.5"]
                  [net.postgis/postgis-jdbc "2.3.0" :exclusions [postgresql org.postgresql/postgresql]]
                  [hikari-cp "2.7.1"]
