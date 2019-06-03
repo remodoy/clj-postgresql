@@ -1,0 +1,10 @@
+{:deps
+ {org.clojure/clojure #:mvn{:version "1.10.0"},
+  hikari-cp #:mvn{:version "2.7.1"},
+  net.postgis/postgis-jdbc #:mvn{:version "2.3.0"},
+  clj-time #:mvn{:version "0.15.1"},
+  org.postgresql/postgresql #:mvn{:version "42.2.5"},
+  cheshire #:mvn{:version "5.8.1"},
+  org.clojure/java.jdbc #:mvn{:version "0.7.9"},
+  prismatic/schema #:mvn{:version "1.1.10"},
+  org.clojure/java.data #:mvn{:version "0.1.1"}}}
