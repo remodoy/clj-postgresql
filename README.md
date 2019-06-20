@@ -54,6 +54,18 @@ parameters in the environment. E.g.:
 (jdbc/query db2 ["SELECT 'test'"])
 ```
 
+You can pass
+[hikari-specific](https://github.com/tomekw/hikari-cp#configuration-options)
+options via the `hikari` keyword:
+
+```clj
+(def db2 (pg/pool :host "db1.example.com"
+                  :user "myaccount"
+                  :dbname "anotherdb"
+                  :password "foobar"
+                  :hikari {:read-only true))
+```
+
 The pool can be closed with:
 
 ```clj
