@@ -5,14 +5,16 @@
   (:import (java.util.concurrent TimeUnit)))
 
 (defn db-spec->pool-config
-  "Converts a db-spec with :host :port :dbname and :user to Hikari pool config"
-  [{:keys [dbtype host port dbname user password]}]
-  (let [host-part (when host (if port (format "%s:%s" host port) host))
-        pool-conf {:jdbc-url (format "jdbc:%s://%s/%s" dbtype (or host-part "") dbname)
-                   :username user}]
-    (if password
-      (assoc pool-conf :password password)
-      pool-conf)))
+  "Converts a db-spec with :host :port :dbname and :user to Hikari pool
+  config. Hikari options can be passed with `hikari`. See
+  https://github.com/tomekw/hikari-cp#configuration-options for that
+  list."
+  [{:keys [dbtype host port dbname user password hikari]}]
+  (let [host-part (when host (if port (format "%s:%s" host port) host))]
+    (cond-> {:jdbc-url (format "jdbc:%s://%s/%s" dbtype (or host-part "") dbname)
+             :username user}
+      hikari (merge hikari)
+      password (assoc :password password))))
 
 (defn pooled-db
   [spec opts]
