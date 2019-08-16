@@ -63,7 +63,7 @@ options via the `hikari` keyword:
                   :user "myaccount"
                   :dbname "anotherdb"
                   :password "foobar"
-                  :hikari {:read-only true))
+                  :hikari {:read-only true}))
 ```
 
 The pool can be closed with:
