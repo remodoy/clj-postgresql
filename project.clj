@@ -12,7 +12,6 @@
                  [org.clojure/java.data "0.1.1"]
                  [org.clojure/java.jdbc "0.7.9"]
                  [prismatic/schema "1.1.10"]]
-  :profiles {:dev {:dependencies [[midje "1.9.8"]
-                                  [org.slf4j/slf4j-simple "1.7.26"]]
+  :profiles {:dev {:dependencies [[midje "1.9.8"]]
                    :plugins [[lein-midje "3.1.1"]]}})
 
