@@ -1,7 +1,6 @@
 (ns clj-postgresql.pool
   "Hikari based connection pool"
-  (:require [clojure.java.data :as data]
-            [hikari-cp.core :as hikari])
+  (:require [hikari-cp.core :as hikari])
   (:import (java.util.concurrent TimeUnit)))
 
 (defn db-spec->pool-config

@@ -103,7 +103,7 @@
   [schema m]
   (try (s/validate schema m)
        true
-       (catch Exception e
+       (catch Exception _
          false)))
 
 (defn point?
