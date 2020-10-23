@@ -2,9 +2,7 @@
   "Allow using PostgreSQL from Clojure as effortlessly as possible by reading connection parameter defaults from
   PostgreSQL environment variables PGDATABASE, PGHOST, PGPORT, PGUSER and by reading password from ~/.pgpass if available."
   (:require [clj-postgresql.types]
-            [cheshire.core :as json]
-            [clojure.xml :as xml]
-            [clj-postgresql.pool :refer [pooled-db close-pooled-db!] :as pool]
+            [clj-postgresql.pool :refer [pooled-db] :as pool]
             [clj-postgresql.pgpass :as pgpass]
             [clojure.java.jdbc :as jdbc])
   (:import org.postgresql.util.PGobject
@@ -74,7 +72,7 @@
 
 (defn close!
   "Close db-spec if possible. Return true if the datasource was closeable and closed."
-  [{:keys [datasource] :as db-spec}]
+  [{:keys [datasource]}]
   (when (instance? java.io.Closeable datasource)
     (.close ^java.io.Closeable datasource)
     true))

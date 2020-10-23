@@ -172,8 +172,7 @@
 (extend-protocol clojure.java.jdbc/ISQLParameter
   java.lang.Number
   (set-parameter [num ^java.sql.PreparedStatement s ^long i]
-    (let [conn (.getConnection s)
-          meta (.getParameterMetaData s)
+    (let [meta (.getParameterMetaData s)
           type-name (.getParameterTypeName meta i)]
       (.setObject s i (num->parameter num type-name)))))
 
