@@ -1,8 +1,7 @@
 dist: precise
 sudo: false
 language: clojure
-lein: lein2
-script: lein2 midje
+script: lein sub test
 notifications:
   irc: "irc.freenode.org#clj-postgresql"
 jdk:
@@ -10,7 +9,7 @@ jdk:
 services:
   - postgresql
 addons:
-  postgresql: 9.4
+  postgresql: "9.4"
 before_script:
   - psql -U postgres -c 'CREATE DATABASE clj_pg_test;' postgres
   - psql -U postgres -c 'CREATE EXTENSION postgis;' clj_pg_test
