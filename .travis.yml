@@ -1,19 +1,16 @@
-dist: precise
 sudo: false
 language: clojure
 script: lein sub test
 notifications:
   irc: "irc.freenode.org#clj-postgresql"
-jdk:
-  - oraclejdk8
 services:
   - postgresql
 addons:
-  postgresql: "9.4"
+  postgresql: "10"
 before_script:
   - psql -U postgres -c 'CREATE DATABASE clj_pg_test;' postgres
   - psql -U postgres -c 'CREATE EXTENSION postgis;' clj_pg_test
 after_failure:
   - psql -c '\d' -U postgres
-  - cat /var/log/postgresql/postgresql-9.4-main.log
+  - cat /var/log/postgresql/postgresql-10-main.log
 env: PGDATABASE='clj_pg_test' PGUSER='postgres'
