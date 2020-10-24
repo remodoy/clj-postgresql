@@ -1,6 +1,8 @@
 language: clojure
 #lein: lein
-script: lein sub test
+script:
+  - lein sub install
+  - lein sub test
 #notifications:
 #  irc: "irc.freenode.org#clj-postgresql"
 services:
