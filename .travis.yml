@@ -14,3 +14,6 @@ after_failure:
   - psql -c '\d' -U postgres
   - cat /var/log/postgresql/postgresql-10-main.log
 env: PGDATABASE='clj_pg_test' PGUSER='postgres'
+vm: lxd
+os: linux
+dist: focal
