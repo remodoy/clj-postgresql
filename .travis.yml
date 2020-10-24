@@ -1,8 +1,8 @@
 language: clojure
-lein: lein
+#lein: lein
 script: lein sub test
-notifications:
-  irc: "irc.freenode.org#clj-postgresql"
+#notifications:
+#  irc: "irc.freenode.org#clj-postgresql"
 services:
   - postgresql
 addons:
@@ -14,7 +14,7 @@ after_failure:
   - psql -c '\d' -U postgres
   - cat /var/log/postgresql/postgresql-10-main.log
 env: PGDATABASE='clj_pg_test' PGUSER='postgres'
-virt: lxd
-os: linux
+#virt: lxd
+#os: linux
 #dist: focal
-arch: arm64
+#arch: arm64
