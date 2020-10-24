@@ -16,5 +16,5 @@ after_failure:
 env: PGDATABASE='clj_pg_test' PGUSER='postgres'
 virt: lxd
 os: linux
-dist: focal
+#dist: focal
 arch: arm64
