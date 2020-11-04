@@ -26,28 +26,30 @@
 
 (defn env-spec
   "Get db spec by reading PG* variables from the environment."
-  [{:keys [PGDATABASE PGHOST PGPORT PGUSER] :as env}]
+  [{:keys [PGDATABASE PGHOST PGPORT PGUSER PGPASS] :as env}]
   {:pre  [(map? env)]
    :post [(map? %)]}
   (cond-> {}
           PGDATABASE (assoc :dbname PGDATABASE)
           PGHOST (assoc :host PGHOST)
           PGPORT (assoc :port PGPORT)
-          PGUSER (assoc :user PGUSER)))
+          PGUSER (assoc :user PGUSER)
+          PGPASS (assoc :password PGPASS)))
 
 (defn spec
   "Create database spec for PostgreSQL. Uses PG* environment variables by default
   and acceps options in the form:
   (spec :dbname ... :host ... :port ... :user ... :password ...)"
-  [& {:keys [password] :as opts}]
+  [& {:as opts}]
   {:post [(contains? % :dbname)
           (contains? % :user)]}
-  (let [spec-opts (select-keys opts [:dbname :host :port :user])
+  (let [default-spec-opts (default-spec)
+        env-spec-opts (env-spec (getenv->map (System/getenv)))
+        spec-opts (select-keys opts [:dbname :host :port :user :password])
         extra-opts (dissoc opts :dbname :host :port :user :password)
-        db-spec (merge (default-spec)
-                       (env-spec (getenv->map (System/getenv)))
-                       spec-opts)
-        password (or password (pgpass/pgpass-lookup db-spec))]
+        db-spec (merge default-spec-opts env-spec-opts spec-opts)
+        password (when-not (:password db-spec)
+                   (pgpass/pgpass-lookup db-spec))]
     (cond-> (merge extra-opts db-spec)
             password (assoc :password password))))
 
