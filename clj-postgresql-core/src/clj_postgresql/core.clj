@@ -39,19 +39,21 @@
 (defn spec
   "Create database spec for PostgreSQL. Uses PG* environment variables by default
   and acceps options in the form:
-  (spec :dbname ... :host ... :port ... :user ... :password ...)"
-  [& {:as opts}]
-  {:post [(contains? % :dbname)
-          (contains? % :user)]}
-  (let [default-spec-opts (default-spec)
-        env-spec-opts (env-spec (getenv->map (System/getenv)))
-        spec-opts (select-keys opts [:dbname :host :port :user :password])
-        extra-opts (dissoc opts :dbname :host :port :user :password)
-        db-spec (merge default-spec-opts env-spec-opts spec-opts)
-        password (when-not (:password db-spec)
-                   (pgpass/pgpass-lookup db-spec))]
-    (cond-> (merge extra-opts db-spec)
-            password (assoc :password password))))
+  (spec {:dbname ... :host ... :port ... :user ... :password ...})"
+  ([opts]
+   {:post [(contains? % :dbname)
+           (contains? % :user)]}
+   (let [default-spec-opts (default-spec)
+         env-spec-opts (env-spec (getenv->map (System/getenv)))
+         spec-opts (select-keys opts [:dbname :host :port :user :password])
+         extra-opts (dissoc opts :dbname :host :port :user :password)
+         db-spec (merge default-spec-opts env-spec-opts spec-opts)
+         password (when-not (:password db-spec)
+                    (pgpass/pgpass-lookup db-spec))]
+     (cond-> (merge extra-opts db-spec)
+             password (assoc :password password))))
+  ([]
+   (spec {})))
 
 (defn close!
   "Close db-spec if possible. Return true if the datasource was closeable and closed."
