@@ -6,8 +6,10 @@
   :plugins [[lein-sub "0.3.0"]]
   :dependencies [[clj-postgresql/clj-postgresql-core "1.0.0-SNAPSHOT"]
                  [clj-postgresql/clj-postgresql-pool "1.0.0-SNAPSHOT"]
-                 [clj-postgresql/clj-postgresql-gis "1.0.0-SNAPSHOT"]]
+                 [clj-postgresql/clj-postgresql-gis "1.0.0-SNAPSHOT"]
+                 [clj-postgresql/clj-postgresql-aws "1.0.0-SNAPSHOT"]]
   :sub ["clj-postgresql-core"
         "clj-postgresql-pool"
-        "clj-postgresql-gis"])
+        "clj-postgresql-gis"
+        "clj-postgresql-aws"])
 
