@@ -1,5 +1,5 @@
 {:deps
- {org.clojure/clojure #:mvn{:version "1.10.0"},
+ {org.clojure/clojure #:mvn{:version "1.12.0"},
   hikari-cp #:mvn{:version "2.7.1"},
   net.postgis/postgis-jdbc #:mvn{:version "2.3.0"},
   clj-time #:mvn{:version "0.15.1"},
